@@ -1,4 +1,4 @@
-package dev.kohn.playground.graph;
+package dev.kohn.playground.tracing;
 
 public class NoSuchTraceException extends RuntimeException {
     public final static String DEFAULT_MESSAGE = "NO SUCH TRACE";
