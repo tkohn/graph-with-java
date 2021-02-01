@@ -23,6 +23,6 @@ public class App {
         System.out.println(" 7. " + distributedTracingGraph.numberOfTracesWithConfiguredHops("A", "C", 4, 4));
         System.out.println(" 8. " + distributedTracingGraph.latencyForShortestTraceBetween("A", "C"));
         System.out.println(" 9. " + distributedTracingGraph.latencyForShortestTraceBetween("B", "B"));
-        System.out.println("10. skipped");
+        System.out.println("10. " + distributedTracingGraph.numberOfTracesWithConfiguredPathLengthAndWeight("C", "C", 1, 29,29));
     }
 }

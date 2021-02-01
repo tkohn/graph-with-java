@@ -13,7 +13,9 @@ import java.util.Objects;
 import java.util.Optional;
 
 /**
- *
+ * Represents a distributed tracing graph.
+ * It can calculate latency for a given trace,
+ * number of traces for start and end service or latency for the shortest path.
  */
 public final class DistributedTracingGraph {
     private final static String ERROR_MESSAGE = "NO SUCH TRACE";
@@ -61,20 +63,47 @@ public final class DistributedTracingGraph {
      *
      * @param startService start point
      * @param targetService end point
-     * @param minimumHop the minimum number of hops in th trace
-     * @param maximumHop the maximum number of allowed hops in the trace
+     * @param minimumPathLength the minimum number of hops in th trace
+     * @param maximumPathLength the maximum number of allowed hops in the trace
      * @return the number of traces between two services
      */
     public String numberOfTracesWithConfiguredHops(
-            String startService, String targetService, int minimumHop, int maximumHop) {
+            String startService, String targetService, int minimumPathLength, int maximumPathLength) {
 
-        List<GraphPath<String, DefaultWeightedEdge>> allTracesForMaximumHops =
-                allDirectedPaths.getAllPaths(startService, targetService, false, maximumHop);
+        List<GraphPath<String, DefaultWeightedEdge>> allTracesForMaximumPathLength =
+                getAllPaths(startService, targetService, maximumPathLength);
 
-        return String.valueOf(allTracesForMaximumHops
+        return String.valueOf(allTracesForMaximumPathLength
                 .stream()
-                .filter(path -> path.getLength() >= minimumHop && path.getLength() <= maximumHop)
+                .filter(path -> path.getLength() >= minimumPathLength && path.getLength() <= maximumPathLength)
                 .count());
+    }
+
+    /**
+     * Calculates all traces between a start and end point.
+     *
+     * @param startService start point
+     * @param targetService end point
+     * @param minimumPathLength the minimum number of hops in th trace
+     * @param maximumPathLength the maximum number of allowed hops in the trace
+     * @param maximumLatency the maximum latency for the trace
+     * @return the number of traces between two services for a maximum latency
+     */
+    public String numberOfTracesWithConfiguredPathLengthAndWeight(
+            String startService, String targetService, int minimumPathLength, int maximumPathLength, int maximumLatency) {
+
+        List<GraphPath<String, DefaultWeightedEdge>> allTracesForMaximumPathLength =
+                getAllPaths(startService, targetService, maximumPathLength);
+
+        return String.valueOf(allTracesForMaximumPathLength
+                .stream()
+                .filter(path -> path.getLength() >= minimumPathLength && path.getWeight() <= maximumLatency)
+                .count());
+    }
+
+    private List<GraphPath<String, DefaultWeightedEdge>> getAllPaths(
+            String startService, String targetService, int maximumPathLength){
+        return allDirectedPaths.getAllPaths(startService, targetService, false, maximumPathLength);
     }
 
     /**
