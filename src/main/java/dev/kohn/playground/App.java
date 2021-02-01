@@ -6,8 +6,13 @@ import dev.kohn.playground.tracing.DistributedTracingGraph;
 public class App {
     public static void main(String[] args) {
 
+        if(args.length == 0){
+            System.out.println("Please provide a path to a text file which contains the graph description.");
+            return;
+        }
+
         final DistributedTracingGraph distributedTracingGraph = new DistributedTracingGraph(
-                GraphGenerator.createDirectedWeightedGraphFromFile("/home/torsten/development/test.txt"));
+                GraphGenerator.createDirectedWeightedGraphFromFile(args[0]));
 
         System.out.println(" 1. " + distributedTracingGraph.averageLatencyFor("A", "B", "C"));
         System.out.println(" 2. " + distributedTracingGraph.averageLatencyFor("A", "D"));
